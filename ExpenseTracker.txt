@@ -1,0 +1,65 @@
+class ExpenseTracker:
+    def __init__(self):
+        self.users = {}
+    
+    def add_user(self, user):
+        self.users[user] = {}
+    
+    def add_expense(self, user, amount):
+        if user not in self.users:
+            raise ValueError("User does not exist. Please add the user first.")
+        self.users[user]['expenses'] = self.users[user].get('expenses', 0) + amount
+    
+    def split_bills(self):
+        total_expenses = sum(user['expenses'] for user in self.users.values())
+        per_person_share = total_expenses / len(self.users)
+        for user, data in self.users.items():
+            if data.get('expenses', 0) < per_person_share:
+                print(f"{user} owes {per_person_share - data.get('expenses', 0)}")
+            elif data.get('expenses', 0) > per_person_share:
+                print(f"{user} gets {data.get('expenses', 0) - per_person_share}")
+            else:
+                print(f"{user} is settled")
+    
+    def track_expenses(self):
+        print("Current Expenses:")
+        for user, data in self.users.items():
+            print(f"{user}: {data.get('expenses', 0)}")
+
+
+def main():
+    tracker = ExpenseTracker()
+    
+    while True:
+        print("\nExpense Tracker Menu:")
+        print("1. Add User")
+        print("2. Add Expense")
+        print("3. Split Bills")
+        print("4. Track Expenses")
+        print("5. Exit")
+        
+        choice = input("Enter your choice: ")
+        
+        if choice == '1':
+            user = input("Enter username: ")
+            tracker.add_user(user)
+        elif choice == '2':
+            user = input("Enter username: ")
+            amount = float(input("Enter expense amount: "))
+            try:
+                tracker.add_expense(user, amount)
+            except ValueError as e:
+                print(e)
+        elif choice == '3':
+            tracker.split_bills()
+        elif choice == '4':
+            tracker.track_expenses()
+        elif choice == '5':
+            print("Exiting...!! Bye Bye..!!")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+
+if __name__ == "__main__":
+    main()
